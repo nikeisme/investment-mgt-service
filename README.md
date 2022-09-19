@@ -1,2 +1,2 @@
 # investment-mgt-service
-주어진 고객 투자 응답하는 REST API 개발
+고객 투자 데이터 응답 REST API 개발
