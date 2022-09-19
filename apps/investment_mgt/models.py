@@ -5,7 +5,7 @@ class Account (models.Model) :
 
     account_num = models.CharField("계좌번호", max_length=13,unique=True, null=False, blank=False)
     account_name = models.CharField("계좌명", max_length=45,null=False, blank=False)
-    account_total = models.IntegerField("계좌 총 자산",default=0,null=True)
+    account_total = models.PositiveIntegerField("계좌 총 자산",default=0,null=True, validators=[MinValueValidator(0)])
 
     class Meta:
         db_table = "accounts"
@@ -33,7 +33,7 @@ class Investment(models.Model):
 
     user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="investment",primary_key=True)
     brokerage = models.CharField("증권사",max_length=45)
-    principal = models.IntegerField("투자원금", null=True,blank=True)
+    principal = models.PositiveIntegerField("투자원금", null=True,blank=True,validators=[MinValueValidator(0)])
 
     class Meta:
         db_table = "investments"
@@ -60,7 +60,7 @@ class UserHolding(models.Model):
         User, related_name="user_holdings", on_delete=models.SET_NULL,null=True
     )
     quantity = models.PositiveSmallIntegerField(null=True, default=1, validators=[MinValueValidator(1)])
-    current_price = models.IntegerField("현재가", default=0, null=True, blank=True)
+    current_price = models.PositiveIntegerField("현재가", default=0, null=True, blank=True, validators=[MinValueValidator(0)])
 
     class Meta:
         db_table = "user_holdings"
