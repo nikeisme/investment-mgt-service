@@ -118,3 +118,32 @@ class AssetSerializer(serializers.ModelSerializer):
             "status": {"read_only": True},
         }
 
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        signature = validated_data.pop("signature")
+
+        try:
+
+            encoded_data = jwt.decode(signature, SECRET_KEY)
+
+            account_num = encoded_data.get("account_num", None)
+            user_name = encoded_data.get("user_name", None)
+            transfer_amount = encoded_data.get("transfer_amount", None)
+
+            if (
+                    account_num == instance.account_num
+                    and user_name == instance.user_name
+                    and transfer_amount == instance.transfer_amount
+            ):
+                instance.status = True
+                instance.save()
+
+                account = Account.objects.get(account_num=account_num)
+                account.account_total += transfer_amount
+                account.save()
+
+                return instance
+
+        except Exception as e:
+            transaction.set_rollback(rollback=True)
+            raise ValidationError(str(e))

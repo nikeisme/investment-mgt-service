@@ -1,11 +1,14 @@
-
+import jwt
+from django.db import transaction
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from api.models import User, Investment, UserHolding, DepositInfo
+from api.models import User, Investment, UserHolding, DepositInfo, Account
 from api.serializers import InvestmentViewSerializer, InvestmentDetailViewSerializer, UserHoldingViewSerializer, \
-    DepositInfoSerializer
+    DepositInfoSerializer, AssetSerializer
+from backend_core.settings.common import SECRET_KEY
 
 
 class InvestmentView(APIView):
@@ -56,3 +59,10 @@ class InvestmentDeposit(APIView):
 
         return Response(data=serializer.data,status=status.HTTP_201_CREATED)
 
+    def put(self, request):
+        depositinfo = DepositInfo.objects.get(id=request.data.get("transfer_identifier"))
+        serializer = AssetSerializer(depositinfo, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
