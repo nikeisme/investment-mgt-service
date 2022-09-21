@@ -4,18 +4,15 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "==4.1.1"
-django-environ = "==0.9.0"
-asgiref = "==3.5.2"
-django-extensions = "==3.2.1"
-djangorestframework = "==3.13.1"
-pytz = "==2022.2.1"
-sqlparse = "==0.4.2"
-pandas = "*"
-openpyxl = "*"
-django-debug-toolbar = "==3.6.0"
+django = "*"
+djangorestframework = "*"
+python-dotenv = "*"
+black = "*"
+mysqlclient = "*"
+django-debug-toolbar = "*"
+pymysql = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.10"
+python_version = "3.9"
