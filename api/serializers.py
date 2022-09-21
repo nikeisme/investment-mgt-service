@@ -96,4 +96,3 @@ class DepositInfoSerializer(serializers.ModelSerializer):
         }
 
         """ extra_kwargs : write_only 특성을 적용 """
-
