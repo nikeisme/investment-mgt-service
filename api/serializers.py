@@ -1,12 +1,15 @@
 from rest_framework import serializers
 
-from api.models import User
+from api.models import User, Investment
+
 
 class InvestmentViewSerializer(serializers.ModelSerializer):
 
+    """ 데이터 조회 - 투자 화면 """
+
     account_name = serializers.ReadOnlyField(source="account.account_name")
     account_number = serializers.ReadOnlyField(source="account.account_num")
-    account_total= serializers.ReadOnlyField(source="account.account_toal")
+    account_total= serializers.ReadOnlyField(source="account.account_total")
     brokerage = serializers.ReadOnlyField(source="investment.brokerage")
 
     class Meta:
@@ -20,11 +23,41 @@ class InvestmentViewSerializer(serializers.ModelSerializer):
             "investment",
         ]
 
- # class InvestmentDetailViewSerializer(serializers.ModelSerializer):
- #     """
- #    데이터 조회 - 투자상세화면
- #     """
- #
+class InvestmentDetailViewSerializer(serializers.ModelSerializer):
+
+    """ 데이터 조회 - 투자  상세 화면 """
+
+    account_name = serializers.ReadOnlyField(source="account.account_name")
+    brokerage = serializers.ReadOnlyField(source="investment.brokerage")
+    account_number = serializers.ReadOnlyField(source="account.account_num")
+    account_total= serializers.ReadOnlyField(source="account.account_total")
+    principal= serializers.ReadOnlyField(source="Investment.principal")
+    investment_income_total = serializers.SerializerMethodField()
+    investment_income_rate = serializers.SerializerMethodField()
+
+
+    class Meta:
+        model = Investment
+        fields = [
+        "account_name",
+        "brokerage",
+        "account_number",
+        "account_total",
+        "principal",
+        "investment_income_total",
+        "investment_income_rate",
+        "user",
+    ]
+
+    def get_investment_income_total(self, obj):
+        return obj.user.account.account_total - obj.principal
+
+    def get_investment_income_rate(self, obj):
+        return (obj.user.account.account_total - obj.principal) / (obj.principal * 100)
+
+
+
+
  # class InvestmentDetailViewSerializer(serializers.ModelSerializer):
  #     """
  #    데이터 조회 - 보유종목화면 API
