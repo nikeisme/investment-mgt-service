@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api.models import User, Investment
+from api.models import User, Investment, UserHolding
 
 
 class InvestmentViewSerializer(serializers.ModelSerializer):
@@ -54,9 +54,17 @@ class InvestmentDetailViewSerializer(serializers.ModelSerializer):
         return (obj.user.account.account_total - obj.principal) / (obj.principal * 100)
 
 
+class UserHoldingViewSerializer(serializers.ModelSerializer):
+    """보유종목 화면 Serializer"""
 
+    holding_name = serializers.ReadOnlyField(source="holding.stock_name")
+    asset_group = serializers.ReadOnlyField(source="holding.asset_group")
+    isin = serializers.ReadOnlyField(source="holding.isin")
+    appraisal_amount = serializers.SerializerMethodField()
 
- # class InvestmentDetailViewSerializer(serializers.ModelSerializer):
- #     """
- #    데이터 조회 - 보유종목화면 API
- #    """
+    class Meta:
+        model = UserHolding
+        fields = ["holding_name", "asset_group", "appraisal_amount","isin"]
+
+    def get_appraisal_amount(self, obj):
+        return obj.quantity * obj.current_price

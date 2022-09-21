@@ -3,8 +3,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from api.models import User, Investment
-from api.serializers import InvestmentViewSerializer, InvestmentDetailViewSerializer
+from api.models import User, Investment, UserHolding
+from api.serializers import InvestmentViewSerializer, InvestmentDetailViewSerializer, UserHoldingViewSerializer
 
 
 class InvestmentView(APIView):
@@ -27,4 +27,16 @@ class InvestmentDetailView(APIView):
     def get(self, request, pk):
         queryset = Investment.objects.get(id=pk)
         serializer = InvestmentDetailViewSerializer(queryset)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+
+class UserHoldingView(APIView):
+
+    """보유종목 화면 API"""
+
+    def get(self, request, pk):
+        queryset = UserHolding.objects.filter(user=User.objects.get(id=pk))
+        serializer = UserHoldingViewSerializer(queryset,many=True)
+
         return Response(data=serializer.data, status=status.HTTP_200_OK)
