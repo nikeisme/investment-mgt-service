@@ -1,0 +1,9 @@
+
+# Pycharm
+.idea/*
+
+# Environment Variables
+.env
+
+# Django
+migrations/
