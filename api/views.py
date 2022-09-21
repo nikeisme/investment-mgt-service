@@ -23,8 +23,8 @@ class InvestmentDetailView(APIView):
     """
     투자 상세 화면
     """
+
     def get(self, request, pk):
         queryset = Investment.objects.get(id=pk)
         serializer = InvestmentDetailViewSerializer(queryset)
-
         return Response(data=serializer.data, status=status.HTTP_200_OK)

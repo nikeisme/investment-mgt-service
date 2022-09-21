@@ -33,7 +33,7 @@ class User(models.Model):
 
 class Investment(models.Model):
 
-    user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="investment",primary_key=True)
+    user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="investment")
     brokerage = models.CharField("증권사",max_length=45)
     principal = models.PositiveIntegerField("투자원금", null=True,blank=True,validators=[MinValueValidator(0)])
 

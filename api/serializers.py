@@ -27,11 +27,9 @@ class InvestmentDetailViewSerializer(serializers.ModelSerializer):
 
     """ 데이터 조회 - 투자  상세 화면 """
 
-    account_name = serializers.ReadOnlyField(source="account.account_name")
-    brokerage = serializers.ReadOnlyField(source="investment.brokerage")
-    account_number = serializers.ReadOnlyField(source="account.account_num")
-    account_total= serializers.ReadOnlyField(source="account.account_total")
-    principal= serializers.ReadOnlyField(source="Investment.principal")
+    account_name = serializers.ReadOnlyField(source="user.account.account_name")
+    account_number = serializers.ReadOnlyField(source="user.account.account_num")
+    account_total= serializers.ReadOnlyField(source="user.account.account_total")
     investment_income_total = serializers.SerializerMethodField()
     investment_income_rate = serializers.SerializerMethodField()
 
