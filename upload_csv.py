@@ -28,7 +28,7 @@ def upload_asset_group_info(csv_asset_group):
             "invalid_rows": [],
         }
         for idx, row in enumerate(data_reader):
-            # 헤더는 건너뜀
+
             if idx == 0:
                 continue
 
@@ -50,7 +50,7 @@ def upload_asset_group_info(csv_asset_group):
                 result["success_rows"] += 1
 
             except Exception as e:
-                # raise ValidationError(str(e))
+
                 result["failed_rows"] += 1
                 result["invalid_rows"].append(
                     {"error row": idx + 1, "error detail": str(e)}
