@@ -9,6 +9,8 @@ djangorestframework = "*"
 python-dotenv = "*"
 black = "*"
 mysqlclient = "*"
+django-debug-toolbar = "*"
+pymysql = "*"
 
 [dev-packages]
 

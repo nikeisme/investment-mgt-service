@@ -9,7 +9,8 @@ from django.db import transaction
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend_core.settings.local")
 django.setup()
 
-from api import Stock, User, Account, Investment, UserHolding
+from api.models import Stock, Account, User, Investment, UserHolding
+
 
 CSV_ACCOUNT_ASSET = "./csv/account_asset_info_set.csv"
 CSV_ACCOUNT_BASIC = "./csv/account_basic_info_set.csv"
@@ -17,11 +18,7 @@ CSV_ASSET_GROUP = "./csv/asset_group_info_set.csv"
 
 
 def upload_asset_group_info(csv_asset_group):
-    """
-    자산군 그룹 상세 CSV File Upload
-    :param csv_asset_group:
-    :return:
-    """
+
     with open(csv_asset_group) as in_file:
         data_reader = csv.reader(in_file)
         result = {
@@ -38,7 +35,6 @@ def upload_asset_group_info(csv_asset_group):
             try:
                 stock_name, ISIN, asset_group_name = row[0], row[1], row[2]
 
-                # 중복되지 않은 자산군인 데이터만 생성
                 if not (stock_name and ISIN and asset_group_name):
                     raise KeyError("row 데이터가 충분치 않습니다.")
 
@@ -67,12 +63,7 @@ def upload_asset_group_info(csv_asset_group):
 
 
 def upload_asset_info(csv_asset_info):
-    """
-    자산 상세 CSV File Upload
-    :param csv_asset_info:
-    :param csv_asset_basic_info:
-    :return:
-    """
+
     with open(csv_asset_info) as in_file:
         data_reader = csv.reader(in_file)
         result = {
@@ -82,7 +73,7 @@ def upload_asset_info(csv_asset_info):
             "invalid_rows": [],
         }
         for idx, row in enumerate(data_reader):
-            # 헤더는 건너뜀
+
             if idx == 0:
                 continue
 
@@ -143,11 +134,7 @@ def upload_asset_info(csv_asset_info):
 
 
 def upload_asset_basic(csv_asset_basic):
-    """
-    기본 자산 CSV File Upload
-    :param csv_asset_basic:
-    :return:
-    """
+
     with open(csv_asset_basic) as in_file:
         data_reader = csv.reader(in_file)
         result = {
@@ -186,15 +173,15 @@ def upload_asset_basic(csv_asset_basic):
 
 
 @transaction.atomic
-def calculate_account_total_asset():
+def calculate_account_total():
     try:
         users = User.objects.all()
         for user in users:
             user_account = user.account
-            user_account.total_assets = 0
+            user_account.account_total = 0
 
             for user_holding in user.user_holdings.all():
-                user_account.total_assets += (
+                user_account.account_total += (
                     user_holding.current_price * user_holding.quantity
                 )
 
@@ -209,4 +196,4 @@ if __name__ == "__main__":
     upload_asset_group_info(CSV_ASSET_GROUP)
     upload_asset_info(CSV_ACCOUNT_ASSET)
     upload_asset_basic(CSV_ACCOUNT_BASIC)
-    calculate_account_total_asset()
+    calculate_account_total()
