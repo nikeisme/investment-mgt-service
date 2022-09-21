@@ -11,6 +11,7 @@ black = "*"
 mysqlclient = "*"
 django-debug-toolbar = "*"
 pymysql = "*"
+djangorestframework-jwt = "*"
 
 [dev-packages]
 

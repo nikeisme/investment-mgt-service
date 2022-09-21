@@ -70,3 +70,8 @@ class DepositInfo(models.Model):
     account_num = models.CharField("계좌번호",max_length=30,null=False,blank=True)
     transfer_amount = models.PositiveIntegerField("거래금액", null=False, blank=True)
     signature = models.CharField(max_length=300)
+    status = models.BooleanField(default=False)
+
+
+    class Meta:
+        db_table = "deposit_logs"

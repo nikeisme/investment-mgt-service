@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from api.models import User, Investment, UserHolding
+from api.models import User, Investment, UserHolding, DepositInfo
 from api.serializers import InvestmentViewSerializer, InvestmentDetailViewSerializer, UserHoldingViewSerializer, \
     DepositInfoSerializer
 
@@ -55,3 +55,4 @@ class InvestmentDeposit(APIView):
             serializer.save()
 
         return Response(data=serializer.data,status=status.HTTP_201_CREATED)
+

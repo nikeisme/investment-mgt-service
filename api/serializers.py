@@ -1,6 +1,10 @@
+import jwt
+from django.db import transaction
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
-from api.models import User, Investment, UserHolding, DepositInfo
+from api.models import User, Investment, UserHolding, DepositInfo, Account
+from backend_core.settings.common import SECRET_KEY
 
 
 class InvestmentViewSerializer(serializers.ModelSerializer):
@@ -96,3 +100,21 @@ class DepositInfoSerializer(serializers.ModelSerializer):
         }
 
         """ extra_kwargs : write_only 특성을 적용 """
+
+
+class AssetSerializer(serializers.ModelSerializer):
+
+    """ 고객 총 자산 업데이트 """
+
+    transfer_identifier = serializers.IntegerField(source="id", write_only=True)
+
+    class Meta:
+        model = DepositInfo
+
+        fields = ["signature", "transfer_identifier", "status"]
+
+        extra_kwargs = {
+            "signature": {"write_only": True},
+            "status": {"read_only": True},
+        }
+
