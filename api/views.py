@@ -8,6 +8,9 @@ from api.serializers import InvestmentViewSerializer
 
 
 class InvestmentView(APIView):
+    """
+    투자 화면 View
+    """
 
     def get(self, request, pk):
         queryset = User.objects.get(id=pk)
