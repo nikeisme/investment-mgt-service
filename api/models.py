@@ -4,9 +4,9 @@ from django.db import models
 
 class Account (models.Model) :
 
-    account_num = models.CharField("계좌번호", max_length=13,unique=True, null=False, blank=False)
-    account_name = models.CharField("계좌명", max_length=45,null=False, blank=False)
-    account_total = models.IntegerField("계좌 총 자산",default=0,null=True, validators=[MinValueValidator(0)])
+    account_num = models.CharField("계좌번호", max_length=45,unique=True, null=False)
+    account_name = models.CharField("계좌명", max_length=30,null=False)
+    account_total = models.IntegerField("계좌 총 자산",default=0,null=True)
 
     class Meta:
         db_table = "accounts"
@@ -17,11 +17,7 @@ class Account (models.Model) :
 
 class User(models.Model):
 
-    account = models.OneToOneField(
-        Account,
-        on_delete=models.SET_DEFAULT,
-        related_name="user", default="0",
-    )
+    account = models.OneToOneField(Account,on_delete=models.SET_DEFAULT,related_name="user", default="0")
     user_name = models.CharField("유저이름", max_length=45, null=False, blank=False)
 
     class Meta:
@@ -33,9 +29,9 @@ class User(models.Model):
 
 class Investment(models.Model):
 
-    user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="investment",primary_key=True)
+    user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="investment")
     brokerage = models.CharField("증권사",max_length=45)
-    principal = models.PositiveIntegerField("투자원금", null=True,blank=True,validators=[MinValueValidator(0)])
+    principal = models.PositiveIntegerField("투자 원금", null=True,blank=True)
 
     class Meta:
         db_table = "investments"
@@ -46,7 +42,7 @@ class Stock(models.Model):
 
     stock_name=models.CharField("종목명",max_length=45,unique=True,null=False,blank=False)
     isin= models.CharField("ISIN", max_length=45, unique=True, null=False, blank=False)
-    asset_group = models.CharField("자산그룹", max_length=45,unique=True,null=False, blank=False)
+    asset_group = models.CharField("자산그룹", max_length=45)
 
 
     class Meta:
@@ -59,12 +55,10 @@ class Stock(models.Model):
 
 class UserHolding(models.Model):
 
-    holding = models.ForeignKey(Stock, on_delete= models.SET_NULL, null=True)
-    user = models.ForeignKey(
-        User, related_name="user_holdings", on_delete=models.SET_NULL,null=True
-    )
-    quantity = models.PositiveSmallIntegerField(null=True, validators=[MinValueValidator(0)])
-    current_price = models.FloatField("현재가", default=0, null=True, blank=True, validators=[MinValueValidator(0)])
+    holding = models.ForeignKey(Stock, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, related_name="user_holdings", on_delete=models.SET_NULL,null=True)
+    quantity = models.PositiveIntegerField("보유 종목 수량", default=0)
+    current_price = models.PositiveIntegerField("현재가", null=True, blank=True)
 
     class Meta:
         db_table = "user_holdings"
