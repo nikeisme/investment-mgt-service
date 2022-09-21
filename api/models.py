@@ -62,3 +62,10 @@ class UserHolding(models.Model):
 
     class Meta:
         db_table = "user_holdings"
+
+class DepositInfo(models.Model):
+    """입금 거래 정보 모델 """
+
+    user_name = models.CharField("고객명",max_length=45,null=False,blank=True)
+    account_num = models.CharField("계좌번호",max_length=30,null=False,blank=True)
+    transfer_amount = models.PositiveIntegerField("거래금액", null=False, blank=True)

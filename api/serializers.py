@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api.models import User, Investment, UserHolding
+from api.models import User, Investment, UserHolding, DepositInfo
 
 
 class InvestmentViewSerializer(serializers.ModelSerializer):
@@ -55,7 +55,7 @@ class InvestmentDetailViewSerializer(serializers.ModelSerializer):
 
 
 class UserHoldingViewSerializer(serializers.ModelSerializer):
-    """보유종목 화면 Serializer"""
+    """데이터 조회 - 보유 종목 화면 API """
 
     holding_name = serializers.ReadOnlyField(source="holding.stock_name")
     asset_group = serializers.ReadOnlyField(source="holding.asset_group")
@@ -68,3 +68,32 @@ class UserHoldingViewSerializer(serializers.ModelSerializer):
 
     def get_appraisal_amount(self, obj):
         return obj.quantity * obj.current_price
+
+
+class DepositInfoSerializer(serializers.ModelSerializer):
+
+    """ 입금 거래 정보 """
+
+    transfer_identifier = serializers.IntegerField(source="id", read_only=True)
+
+
+    class Meta:
+        model = DepositInfo
+
+        fields = [
+            "account_num",
+            "user_name",
+            "transfer_amount",
+            "transfer_identifier",
+        ]
+
+        extra_kwargs = {
+
+            "account_num": {"write_only": True},
+            "user_name": {"write_only": True},
+            "transfer_amount": {"write_only": True},
+
+        }
+
+        """ extra_kwargs : write_only 특성을 적용 """
+
