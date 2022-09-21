@@ -31,7 +31,7 @@ class Investment(models.Model):
 
     user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="investment")
     brokerage = models.CharField("증권사",max_length=45)
-    principal = models.IntegerField("투자 원금", null=True,blank=True)
+    principal = models.PositiveIntegerField("투자 원금", null=True,blank=True)
 
     class Meta:
         db_table = "investments"
@@ -57,8 +57,8 @@ class UserHolding(models.Model):
 
     holding = models.ForeignKey(Stock, on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey(User, related_name="user_holdings", on_delete=models.SET_NULL,null=True)
-    quantity = models.IntegerField("보유 종목 수량", default=1)
-    current_price = models.IntegerField("현재가", null=True, blank=True)
+    quantity = models.PositiveIntegerField("보유 종목 수량", default=0)
+    current_price = models.PositiveIntegerField("현재가", null=True, blank=True)
 
     class Meta:
         db_table = "user_holdings"
