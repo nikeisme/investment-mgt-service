@@ -1,3 +1,4 @@
+
 import os
 import django
 from django.core.exceptions import ValidationError
@@ -19,7 +20,7 @@ CSV_ASSET_GROUP = "./csv/asset_group_info_set.csv"
 
 def upload_asset_group_info(csv_asset_group):
 
-    with open(csv_asset_group) as in_file:
+    with open(csv_asset_group,encoding="utf-8") as in_file:
         data_reader = csv.reader(in_file)
         result = {
             "total_csv_rows": 0,
@@ -36,13 +37,13 @@ def upload_asset_group_info(csv_asset_group):
                 stock_name, ISIN, asset_group_name = row[0], row[1], row[2]
 
                 if not (stock_name and ISIN and asset_group_name):
-                    raise KeyError("row 데이터가 충분치 않습니다.")
+                    raise KeyError("잘못된 데이터가 존재합니다.")
 
                 if Stock.objects.filter(stock_name=stock_name):
-                    raise ValidationError("중복된 종목명이 존재합니다.")
+                    raise ValidationError("종목명 데이터가 중복됩니다.")
 
                 if Stock.objects.filter(isin=ISIN):
-                    raise ValidationError("중복된 ISIN이 존재합니다.")
+                    raise ValidationError("ISIN 데이터가 존재합니다.")
 
                 Stock.objects.create(
                     stock_name=stock_name, isin=ISIN, asset_group=asset_group_name
@@ -64,7 +65,7 @@ def upload_asset_group_info(csv_asset_group):
 
 def upload_asset_info(csv_asset_info):
 
-    with open(csv_asset_info) as in_file:
+    with open(csv_asset_info,encoding="utf-8") as in_file:
         data_reader = csv.reader(in_file)
         result = {
             "total_csv_rows": 0,
@@ -96,7 +97,7 @@ def upload_asset_info(csv_asset_info):
                     and current_price
                     and holding_quantity
                 ):
-                    raise ValidationError("row 데이터가 충분치 않습니다.")
+                    raise ValidationError("잘못된 데이터가 존재합니다.")
 
                 stock = Stock.objects.get(isin=ISIN)
                 stock.current_price = current_price
@@ -135,7 +136,7 @@ def upload_asset_info(csv_asset_info):
 
 def upload_asset_basic(csv_asset_basic):
 
-    with open(csv_asset_basic) as in_file:
+    with open(csv_asset_basic,encoding="utf-8") as in_file:
         data_reader = csv.reader(in_file)
         result = {
             "total_csv_rows": 0,
@@ -145,14 +146,14 @@ def upload_asset_basic(csv_asset_basic):
         }
 
         for idx, row in enumerate(data_reader):
-            # 헤더는 건너뜀
+
             if idx == 0:
                 continue
 
             try:
                 account_num, principal = row[0], row[1]
                 if not (account_num and principal):
-                    raise ValidationError("row 데이터가 충분치 않습니다.")
+                    raise ValidationError("잘못된 데이터가 존재합니다.")
 
                 account = Account.objects.get(account_num=account_num)
                 investment = account.user.investment

@@ -1,4 +1,5 @@
 import jwt
+import bcrypt
 from django.db import transaction
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
@@ -51,8 +52,9 @@ class InvestmentDeposit(APIView):
 
     def post(self, request):
         payload = {**request.data}
+        signature = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
-        serializer = DepositInfoSerializer(data={**payload})
+        serializer = DepositInfoSerializer(data={**payload,"signature": signature})
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
